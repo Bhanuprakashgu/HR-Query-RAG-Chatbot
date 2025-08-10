@@ -10,7 +10,7 @@ from typing import List
 
 API_BASE = os.environ.get("API_BASE", "http://localhost:8000")
 
-st.set_page_config(page_title="HR Resource Chatbot",layout="wide")
+st.set_page_config(page_title="HR Resource Chatbot", page_icon="🤝", layout="wide")
 
 st.title("HR Resource Query Chatbot")
 st.caption("Local Llama 3 via Ollama • Drag-and-drop uploads • No cloud required")
@@ -112,7 +112,7 @@ if "history" not in st.session_state:
 def build_profiles_list(query: str) -> str:
     """Get matching profiles from backend and filter locally for relevance."""
     try:
-        data = requests.get(f"{API_BASE}/employees/search", params={"q": query, "k": 50}, timeout=60).json()
+        data = requests.get(f"{API_BASE}/employees/search", params={"q": query, "k": 5}, timeout=60).json()
     except Exception as e:
         return f"(fallback) Could not fetch profiles: {e}"
 

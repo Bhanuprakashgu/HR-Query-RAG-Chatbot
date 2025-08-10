@@ -43,7 +43,7 @@ with open(DATA_PATH, "r", encoding="utf-8") as f:
 EMB_DIM: Optional[int] = None
 EMP_EMB: Optional[np.ndarray] = None  # shape: (N, D)
 
-app = FastAPI(title="HR Resource Query Chatbot (Offline)")
+app = FastAPI(title="HR Resource Query Chatbot")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
