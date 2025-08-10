@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HR Chatbot — Offline</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>HR Resource Query Chatbot — Offline</h1>
+    <p class="muted">Local Llama 3 via Ollama · Upload CSV/JSON</p>
+
+    <section class="panel">
+      <div id="chat" class="chat"></div>
+      <form id="prompt-form" class="prompt">
+        <input id="prompt" placeholder="Ask for skills, experience, domain, availability…" />
+        <button type="submit">Send</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Upload Employees (JSON)</h2>
+      <div id="dropzone" class="dropzone" style="border:2px dashed #888; padding:16px; border-radius:8px; text-align:center; margin-bottom:12px; cursor:pointer;">
+        Drag & drop employees.json here, or click to select
+      </div>
+      <form id="upload-form">
+        <input type="file" id="file" accept=".json" />
+        <button type="submit">Upload</button>
+      </form>
+      <p id="upload-status" class="muted"></p>
+    </section>
+  </main>
+
+  <script>
+    const API = (new URLSearchParams(location.search)).get('api') || 'http://localhost:8000';
+    const chat = document.getElementById('chat');
+    function addMessage(role, text){
+      const div = document.createElement('div');
+      div.className = 'msg ' + role;
+      div.textContent = text;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+    addMessage('assistant', "Hi! Tell me what you need and I’ll recommend the best people.");
+
+    document.getElementById('prompt-form').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const prompt = document.getElementById('prompt');
+      const q = prompt.value.trim();
+      if(!q) return;
+      addMessage('user', q);
+      prompt.value = '';
+      try{
+        const r = await fetch(API + '/chat', {method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({query:q, k:5})});
+        const data = await r.json();
+        addMessage('assistant', data.content || '(no response)');
+      }catch(err){
+        addMessage('assistant', '(fallback) There was an issue. Please try again.');
+      }
+    });
+
+    async function uploadFile(f){
+      if(!f){
+        document.getElementById('upload-status').textContent = 'Please choose a .json file';
+        return;
+      }
+      if(!f.name.toLowerCase().endsWith('.json')){
+        document.getElementById('upload-status').textContent = 'Please upload a .json file';
+        return;
+      }
+      const fd = new FormData();
+      fd.append('file', f);
+      try{
+        const r = await fetch(API + '/upload', {method:'POST', body: fd});
+        const data = await r.json();
+        document.getElementById('upload-status').textContent = 'Uploaded: ' + (data.added||0) + ' new records';
+      }catch(err){
+        document.getElementById('upload-status').textContent = 'Upload failed';
+      }
+    }
+
+    document.getElementById('upload-form').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f = document.getElementById('file').files[0];
+      uploadFile(f);
+    });
+
+    const dz = document.getElementById('dropzone');
+    dz.addEventListener('click', ()=> document.getElementById('file').click());
+    dz.addEventListener('dragover', (e)=>{ e.preventDefault(); dz.style.background = '#f7f7f7'; });
+    dz.addEventListener('dragleave', ()=>{ dz.style.background = ''; });
+    dz.addEventListener('drop', (e)=>{
+      e.preventDefault();
+      dz.style.background = '';
+      const f = e.dataTransfer.files[0];
+      uploadFile(f);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+:root{ --bg:#0b0d12; --fg:#e8ebf0; --muted:#99a3b3; --card:#121622; --accent:#6c6ff9; }
+*{ box-sizing:border-box; }
+body{ margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; background:var(--bg); color:var(--fg);} 
+.container{ max-width:980px; margin:40px auto; padding:0 20px; }
+.muted{ color:var(--muted); }
+.panel{ background:var(--card); border:1px solid #1e2435; border-radius:12px; padding:16px; margin:20px 0; }
+.chat{ height:360px; overflow:auto; display:flex; flex-direction:column; gap:10px; }
+.msg{ max-width:70%; padding:10px 12px; border-radius:10px; }
+.msg.user{ align-self:flex-end; background:var(--accent); color:#fff; }
+.msg.assistant{ align-self:flex-start; background:#1a2133; }
+.prompt{ display:flex; gap:8px; }
+.prompt input{ flex:1; height:44px; border-radius:10px; border:1px solid #2b3247; background:#0f1320; color:#fff; padding:0 12px; }
+.prompt button{ height:44px; border-radius:10px; background:var(--accent); color:#fff; border:none; padding:0 16px; cursor:pointer; }
