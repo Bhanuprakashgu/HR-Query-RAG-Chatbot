@@ -40,7 +40,7 @@ venv\Scripts\activate      # Windows
 ```bash
 pip install -r requirements.txt
 ```
-4. Install and start [Ollama](https://ollama.ai/), then pull models:
+4. Use CMD // Install and start [Ollama](https://ollama.ai/), then pull models:
 ```bash
 ollama pull nomic-embed-text
 ollama pull llama3.1:8b
