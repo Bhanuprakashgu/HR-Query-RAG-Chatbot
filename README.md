@@ -80,7 +80,7 @@ python start.py
 - UI enhancements with sorting and pagination.
 
 ## Demo
-*(Insert Loom video link or screenshots here)*  
+[Loop Video](https://drive.google.com/file/d/1oucfp-3fVRR0Uh_OjQ1Q1wmaO89yvrP6/view)
 Example query:  
 > “Having 4+ years of experience in Python”  
 Returns a ranked list of matching employees.
